@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oryndor Tandoor — Authentic Flavours of India</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #FFFFFF;
+    --offwhite: #FAF8F5;
+    --green: #2D5A27;
+    --red: #B22222;
+    --gray-light: #F0EDE8;
+    --gray-mid: #C8C4BC;
+    --gray-text: #6B6560;
+    --border: rgba(0,0,0,0.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: #1A1A18; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 60px;
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em; color: #1A1A18; }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-text); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green); }
+
+  /* BUTTONS */
+  .btn-primary {
+    display: inline-block; background: var(--red); color: #fff;
+    padding: 14px 36px; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
+    transition: background 0.25s, transform 0.2s;
+  }
+  .btn-primary:hover { background: #8B1A1A; transform: translateY(-1px); }
+  .btn-outline {
+    display: inline-block; border: 0.5px solid var(--green); color: var(--green);
+    padding: 14px 36px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+    text-decoration: none; margin-left: 16px; transition: background 0.25s, color 0.25s;
+  }
+  .btn-outline:hover { background: var(--green); color: #fff; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; padding: 0 60px; padding-top: 80px;
+    background: var(--white); position: relative; overflow: hidden;
+  }
+  .hero-text { z-index: 2; }
+  .hero-eyebrow {
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 24px; display: flex; align-items: center; gap: 12px;
+  }
+  .hero-eyebrow::before { content: ''; display: block; width: 32px; height: 0.5px; background: var(--green); }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(3.2rem, 6vw, 6rem); font-weight: 900; line-height: 1.0; letter-spacing: -0.02em; color: #1A1A18; margin-bottom: 28px; }
+  h1 .accent { color: var(--red); }
+  .hero-sub { font-size: 1.05rem; font-weight: 300; color: var(--gray-text); letter-spacing: 0.04em; margin-bottom: 48px; line-height: 1.7; max-width: 380px; }
+  #chilly-canvas { position: absolute; right: 0; top: 0; width: 55%; height: 100%; }
+  .hero-scroll-hint {
+    position: absolute; bottom: 40px; left: 60px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray-mid);
+  }
+  .scroll-line { width: 40px; height: 0.5px; background: var(--gray-mid); position: relative; overflow: hidden; }
+  .scroll-line::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: var(--red); animation: scrollLine 2s ease-in-out infinite; }
+  @keyframes scrollLine { 0%{left:-100%} 100%{left:100%} }
+
+  /* SECTIONS */
+  section { padding: 120px 60px; border-top: 0.5px solid var(--border); }
+  .section-label { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--green); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .section-label::before { content: ''; display: block; width: 24px; height: 0.5px; background: var(--green); }
+  h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 4vw, 4rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: #1A1A18; margin-bottom: 24px; }
+
+  /* ABOUT */
+  #about { background: var(--offwhite); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .about-body { font-size: 1rem; line-height: 1.85; color: var(--gray-text); font-weight: 300; }
+  .about-body p + p { margin-top: 18px; }
+  .about-stat-row { display: flex; gap: 48px; margin-top: 48px; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; color: var(--red); line-height: 1; }
+  .stat-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-top: 6px; font-weight: 500; }
+  .about-visual { position: relative; height: 480px; display: flex; align-items: center; justify-content: center; }
+  .about-bg-text { font-family: 'Playfair Display', serif; font-size: 11rem; font-weight: 900; color: rgba(45,90,39,0.06); position: absolute; user-select: none; white-space: nowrap; }
+  .about-quote-card { position: relative; z-index: 2; background: var(--white); border: 0.5px solid var(--border); padding: 40px; max-width: 340px; box-shadow: 0 20px 60px rgba(0,0,0,0.06); }
+  .quote-mark { font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--red); line-height: 0.6; margin-bottom: 20px; display: block; }
+  .quote-text { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; line-height: 1.6; color: #1A1A18; }
+  .quote-attr { margin-top: 20px; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); font-weight: 500; }
+
+  /* PRODUCTS */
+  #products { background: var(--white); }
+  .products-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
+  .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: var(--border); border: 0.5px solid var(--border); }
+  .product-card { background: var(--white); padding: 48px 40px; position: relative; overflow: hidden; transition: background 0.3s; cursor: pointer; }
+  .product-card:hover { background: var(--offwhite); }
+  .product-card:hover .product-arrow { opacity: 1; transform: translateX(0); }
+  .product-icon { font-size: 2rem; margin-bottom: 24px; display: block; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #1A1A18; margin-bottom: 10px; line-height: 1.2; }
+  .product-desc { font-size: 0.85rem; line-height: 1.7; color: var(--gray-text); font-weight: 300; margin-bottom: 28px; }
+  .product-price { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--red); }
+  .product-weight { font-size: 0.72rem; letter-spacing: 0.1em; color: var(--gray-mid); text-transform: uppercase; font-weight: 500; margin-left: 6px; }
+  .product-arrow { position: absolute; bottom: 40px; right: 40px; width: 32px; height: 32px; border: 0.5px solid var(--green); display: flex; align-items: center; justify-content: center; color: var(--green); opacity: 0; transform: translateX(-8px); transition: opacity 0.25s, transform 0.25s; font-size: 0.9rem; }
+  .product-tag { position: absolute; top: 40px; right: 40px; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); background: var(--green); padding: 4px 10px; font-weight: 500; }
+
+  /* REWARDS */
+  #rewards { background: var(--offwhite); }
+  .rewards-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start; }
+  .rewards-intro p { font-size: 0.95rem; line-height: 1.8; color: var(--gray-text); font-weight: 300; margin-top: 20px; margin-bottom: 32px; }
+  .points-badge { display: inline-flex; align-items: baseline; gap: 6px; background: var(--white); border: 0.5px solid var(--border); padding: 16px 24px; margin-top: 8px; }
+  .points-badge .big { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--red); }
+  .points-badge .small { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); font-weight: 500; }
+  .rewards-table-wrap { overflow: hidden; border: 0.5px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead { background: #1A1A18; color: #fff; }
+  thead th { padding: 16px 24px; text-align: left; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; }
+  tbody tr { border-bottom: 0.5px solid var(--border); transition: background 0.2s; }
+  tbody tr:hover { background: rgba(178,34,34,0.03); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td { padding: 18px 24px; color: var(--gray-text); font-weight: 300; line-height: 1.5; }
+  tbody td:first-child { font-weight: 500; color: #1A1A18; }
+  tbody td:nth-child(2) { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--green); }
+  .reward-special td:nth-child(2) { color: var(--red); }
+
+  /* FOOTER */
+  #contact { background: #1A1A18; color: #fff; border-top: none; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 60px; align-items: start; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: #fff; margin-bottom: 16px; }
+  .footer-logo span { color: var(--red); }
+  .footer-tagline { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); font-weight: 400; margin-bottom: 32px; }
+  .footer-divider { width: 32px; height: 0.5px; background: rgba(255,255,255,0.15); margin-bottom: 24px; }
+  .footer-body { font-size: 0.85rem; line-height: 1.8; color: rgba(255,255,255,0.45); font-weight: 300; max-width: 260px; }
+  .footer-col-title { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); font-weight: 500; margin-bottom: 28px; display: flex; align-items: center; gap: 10px; }
+  .footer-col-title::before { content: ''; display: block; width: 20px; height: 0.5px; background: var(--green); }
+  .contact-item { margin-bottom: 20px; }
+  .contact-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); font-weight: 500; margin-bottom: 4px; }
+  .contact-value { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: #fff; letter-spacing: 0.02em; }
+  .footer-nav-links { list-style: none; }
+  .footer-nav-links li { margin-bottom: 14px; }
+  .footer-nav-links a { font-size: 0.88rem; color: rgba(255,255,255,0.45); text-decoration: none; font-weight: 300; transition: color 0.2s; }
+  .footer-nav-links a:hover { color: #fff; }
+  .footer-bottom { background: #111110; text-align: center; padding: 20px 60px; border-top: 0.5px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom-text { font-size: 0.72rem; color: rgba(255,255,255,0.25); letter-spacing: 0.08em; }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    #hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+    #chilly-canvas { width: 100%; height: 50vh; position: relative; }
+    section { padding: 80px 24px; }
+    #about, .rewards-layout { grid-template-columns: 1fr; gap: 40px; }
+    .product-grid { grid-template-columns: 1fr; }
+    #contact { grid-template-columns: 1fr; gap: 40px; }
+    .products-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .nav-links { display: none; }
+    .footer-bottom { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Oryndor<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#rewards">Rewards</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#products" class="btn-primary" style="padding:10px 24px;font-size:0.72rem;">Shop Now</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">Kashmir Origin · Stone Ground</div>
+    <h1>Oryndor<br><span class="accent">Tandoor.</span></h1>
+    <p class="hero-sub">Authentic Flavours of India — grown in the valleys of Jammu & Kashmir and stone-ground with centuries of tradition.</p>
+    <a href="#products" class="btn-primary">Explore Spices</a>
+    <a href="#about" class="btn-outline">Our Story</a>
+  </div>
+  <canvas id="chilly-canvas"></canvas>
+  <div class="hero-scroll-hint">
+    <span class="scroll-line"></span>
+    Scroll to explore
+  </div>
+</section>
+
+<section id="about">
+  <div class="reveal">
+    <div class="section-label">Our Heritage</div>
+    <h2>Rooted in<br>Kashmir's Soul</h2>
+    <div class="about-body">
+      <p>Nestled among the Himalayas, our story begins in the sunlit valleys of Jammu & Kashmir — where the soil is mineral-rich, the air is crisp, and every chilly carries the memory of the mountains.</p>
+      <p>At Oryndor Tandoor, we believe that authentic spice begins with authentic soil. Our red chillies are handpicked at peak ripeness, sun-dried on traditional khats, and stone-ground using century-old techniques that preserve every volatile oil and flavour compound.</p>
+      <p>No artificial heat. No additives. Just the earth, the sun, and generations of knowledge.</p>
+    </div>
+    <div class="about-stat-row">
+      <div class="stat-item"><div class="stat-num">12+</div><div class="stat-label">Years of Heritage</div></div>
+      <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Stone Ground</div></div>
+      <div class="stat-item"><div class="stat-num">Pure</div><div class="stat-label">No Additives</div></div>
+    </div>
+  </div>
+  <div class="about-visual reveal">
+    <div class="about-bg-text">J&K</div>
+    <div class="about-quote-card">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">A spice is not just a flavour — it is the fingerprint of a land, a season, and a people.</p>
+      <p class="quote-attr">— The Oryndor Philosophy</p>
+    </div>
+  </div>
+</section>
+
+<section id="products">
+  <div class="products-header reveal">
+    <div>
+      <div class="section-label">Our Range</div>
+      <h2>Spices, Unadulterated.</h2>
+    </div>
+    <a href="#contact" class="btn-outline">Order Direct</a>
+  </div>
+  <div class="product-grid">
+    <div class="product-card reveal">
+      <span class="product-tag">Bestseller</span>
+      <span class="product-icon">🌶</span>
+      <div class="product-name">Red Chilly Powder</div>
+      <div class="product-desc">Stone-ground from hand-selected Kashmiri red chillies. Vibrant colour, deep heat, and a fragrance that transforms any dish.</div>
+      <div><span class="product-price">₹250</span><span class="product-weight">/ 500g</span></div>
+      <div class="product-arrow">→</div>
+    </div>
+    <div class="product-card reveal">
+      <span class="product-icon">🌶️</span>
+      <div class="product-name">Whole Dried Chillies</div>
+      <div class="product-desc">Sun-dried whole chillies with intact seeds. Perfect for tempering, slow curries, and infusing oils with authentic Kashmiri heat.</div>
+      <div><span class="product-price">₹220</span><span class="product-weight">/ 500g</span></div>
+      <div class="product-arrow">→</div>
+    </div>
+    <div class="product-card reveal">
+      <span class="product-icon">✦</span>
+      <div class="product-name">Pure Turmeric</div>
+      <div class="product-desc">Cold-ground, high-curcumin turmeric from mountain farms. A warm golden colour and earthy depth unlike any commercial brand.</div>
+      <div><span class="product-price">₹180</span><span class="product-weight">/ 500g</span></div>
+      <div class="product-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<section id="rewards">
+  <div class="rewards-layout">
+    <div class="rewards-intro reveal">
+      <div class="section-label">Loyalty Programme</div>
+      <h2>Earn as<br>You Spice.</h2>
+      <p>Every kilogram you purchase earns you a point. Collect enough points to redeem extraordinary rewards — from household appliances to once-in-a-lifetime spiritual journeys.</p>
+      <div class="points-badge">
+        <span class="big">1 kg</span>
+        <span class="small">= 1 Loyalty Point</span>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="rewards-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Reward</th>
+              <th>Points</th>
+              <th>Est. Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Premium Kitchen Knife Set</td><td>10</td><td>₹1,200</td></tr>
+            <tr><td>Masala Dabba (Spice Box)</td><td>15</td><td>₹800</td></tr>
+            <tr><td>Electric Iron</td><td>50</td><td>₹2,500</td></tr>
+            <tr><td>Mixer Grinder</td><td>120</td><td>₹6,000</td></tr>
+            <tr><td>Refrigerator (200L)</td><td>500</td><td>₹25,000</td></tr>
+            <tr><td>Gold Coin (2g)</td><td>1,000</td><td>₹12,000+</td></tr>
+            <tr class="reward-special"><td>Umrah Package (Mecca)</td><td>20,000</td><td>₹1,20,000+</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-brand reveal">
+    <div class="footer-logo">Oryndor<span>.</span></div>
+    <div class="footer-tagline">Authentic Flavours of India</div>
+    <div class="footer-divider"></div>
+    <p class="footer-body">Premium stone-ground spices sourced from the valleys of Jammu & Kashmir. Delivered pure, preserved with tradition.</p>
+  </div>
+  <div class="reveal">
+    <div class="footer-col-title">Get in Touch</div>
+    <div class="contact-item">
+      <div class="contact-label">Primary</div>
+      <div class="contact-value">+91 95413 04952</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-label">Secondary</div>
+      <div class="contact-value">+91 91862 29225</div>
+    </div>
+    <div class="contact-item" style="margin-top:32px;">
+      <div class="contact-label">Location</div>
+      <div style="font-size:0.88rem;color:rgba(255,255,255,0.45);font-weight:300;margin-top:4px;line-height:1.7;">Jammu & Kashmir, India</div>
+    </div>
+    <div style="margin-top:32px;">
+      <a href="tel:+919541304952" class="btn-primary" style="font-size:0.72rem;padding:12px 28px;">Call to Order</a>
+    </div>
+  </div>
+  <div class="reveal">
+    <div class="footer-col-title">Navigate</div>
+    <ul class="footer-nav-links">
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">Our Heritage</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#rewards">Loyalty Rewards</a></li>
+      <li><a href="#contact">Contact Us</a></li>
+    </ul>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <span class="footer-bottom-text">© 2025 Oryndor Tandoor. All rights reserved.</span>
+  <span class="footer-bottom-text">Stone Ground · Kashmir Origin · No Additives</span>
+</div>
+
+<script>
+// THREE.JS 3D CHILLY
+const canvas = document.getElementById('chilly-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.shadowMap.enabled = true;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+camera.position.set(0, 0, 5.5);
+camera.lookAt(0, 0, 0);
+
+function resizeRenderer() {
+  const rect = canvas.getBoundingClientRect();
+  renderer.setSize(rect.width, rect.height, false);
+  camera.aspect = rect.width / rect.height;
+  camera.updateProjectionMatrix();
+}
+resizeRenderer();
+window.addEventListener('resize', resizeRenderer);
+
+// Lights
+scene.add(new THREE.AmbientLight(0xfff5ee, 0.6));
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+keyLight.position.set(3, 5, 5);
+scene.add(keyLight);
+const fillLight = new THREE.DirectionalLight(0xffe0d0, 0.5);
+fillLight.position.set(-3, 0, 2);
+scene.add(fillLight);
+const rimLight = new THREE.DirectionalLight(0xff6060, 0.3);
+rimLight.position.set(0, -4, -2);
+scene.add(rimLight);
+
+// Materials
+const redMat = new THREE.MeshPhongMaterial({ color: 0xB22222, specular: 0xff9999, shininess: 60, side: THREE.DoubleSide });
+const greenMat = new THREE.MeshPhongMaterial({ color: 0x2D5A27, specular: 0x88cc88, shininess: 30, side: THREE.DoubleSide });
+const stemMat = new THREE.MeshPhongMaterial({ color: 0x3A6B33, specular: 0x558855, shininess: 20 });
+
+// Chilly body using LatheGeometry
+const lathePoints = [];
+for (let i = 0; i <= 60; i++) {
+  const t = i / 60;
+  let r;
+  if (t < 0.08) { r = 0.12 * (t / 0.08); }
+  else if (t < 0.25) { r = 0.12 + (0.32 - 0.12) * ((t - 0.08) / 0.17); }
+  else if (t < 0.6) { r = 0.32 - (0.32 - 0.18) * ((t - 0.25) / 0.35); }
+  else { r = 0.18 * Math.pow(1 - (t - 0.6) / 0.4, 1.4); }
+  const y = (1 - t) * 3.0 - 1.5;
+  lathePoints.push(new THREE.Vector2(r, y));
+}
+const chillyGeom = new THREE.LatheGeometry(lathePoints, 32);
+// Bend vertices
+const posAttr = chillyGeom.getAttribute('position');
+for (let i = 0; i < posAttr.count; i++) {
+  const y = posAttr.getY(i);
+  const normalizedY = (y + 1.5) / 3.0;
+  const bend = Math.pow(normalizedY, 2) * 0.35;
+  posAttr.setX(i, posAttr.getX(i) + bend);
+}
+posAttr.needsUpdate = true;
+chillyGeom.computeVertexNormals();
+const chillyBody = new THREE.Mesh(chillyGeom, redMat);
+chillyBody.rotation.z = 0.15;
+
+// Stem
+const stemCurve = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0, 1.52, 0),
+  new THREE.Vector3(0.04, 1.72, 0.04),
+  new THREE.Vector3(-0.02, 1.92, 0),
+  new THREE.Vector3(0.0, 2.08, 0),
+]);
+const stem = new THREE.Mesh(new THREE.TubeGeometry(stemCurve, 16, 0.04, 8, false), stemMat);
+
+// Leaf
+const leafShape = new THREE.Shape();
+leafShape.moveTo(0, 0);
+leafShape.bezierCurveTo(0.22, 0.08, 0.5, 0.28, 0.55, 0.52);
+leafShape.bezierCurveTo(0.5, 0.72, 0.24, 0.78, 0, 0.9);
+leafShape.bezierCurveTo(-0.24, 0.78, -0.5, 0.72, -0.55, 0.52);
+leafShape.bezierCurveTo(-0.5, 0.28, -0.22, 0.08, 0, 0);
+const leaf = new THREE.Mesh(new THREE.ShapeGeometry(leafShape, 8), greenMat);
+
+// Group
+const chilly = new THREE.Group();
+chilly.add(chillyBody);
+chilly.add(stem);
+const leafPivot = new THREE.Group();
+leafPivot.position.set(0, 1.9, 0);
+leaf.position.set(0.05, 0, 0);
+leaf.rotation.z = -0.5;
+leaf.scale.set(0.6, 0.6, 0.6);
+leafPivot.add(leaf);
+chilly.add(leafPivot);
+chilly.position.set(0.3, -0.2, 0);
+chilly.scale.set(0.88, 0.88, 0.88);
+scene.add(chilly);
+
+// Particles
+const particleGeom = new THREE.BufferGeometry();
+const pCount = 60;
+const pPositions = new Float32Array(pCount * 3);
+for (let i = 0; i < pCount; i++) {
+  pPositions[i*3] = (Math.random()-0.5)*4;
+  pPositions[i*3+1] = (Math.random()-0.5)*4;
+  pPositions[i*3+2] = (Math.random()-0.5)*2-1;
+}
+particleGeom.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+const particles = new THREE.Points(particleGeom, new THREE.PointsMaterial({ color: 0xB22222, size: 0.025, transparent: true, opacity: 0.25 }));
+scene.add(particles);
+
+// Interaction
+let scrollIntensity = 0, lastScroll = 0;
+let mouseX = 0, mouseY = 0;
+window.addEventListener('scroll', () => {
+  const s = window.scrollY;
+  scrollIntensity = Math.min(Math.abs(s - lastScroll) * 0.005, 1.0);
+  lastScroll = s;
+});
+document.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+// Animate
+let t = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  t += 0.016;
+  chilly.position.y = -0.2 + Math.sin(t * 0.7) * 0.12;
+  chilly.rotation.y = Math.sin(t * 0.4) * 0.18 + mouseX * 0.15;
+  chilly.rotation.x = mouseY * 0.08;
+  chilly.rotation.z = Math.sin(t * 0.3) * 0.04 + 0.05;
+  // Leaf wind flutter with scroll intensity
+  const flutter = 0.12 + scrollIntensity * 0.55;
+  leafPivot.rotation.z = Math.sin(t * 3.5) * flutter;
+  leafPivot.rotation.x = Math.cos(t * 2.8) * flutter * 0.4;
+  particles.rotation.y = t * 0.05;
+  particles.rotation.x = t * 0.02;
+  scrollIntensity *= 0.94;
+  renderer.render(scene, camera);
+}
+animate();
+
+// Scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, idx) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), idx * 80);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
